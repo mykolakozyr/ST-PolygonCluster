@@ -4,10 +4,11 @@
 This library provides tools for clustering polygon geometries based on spatial and temporal proximity. Unlike traditional clustering libraries that focus on point geometries, this library is designed to handle polygons, identifying neighbors through overlapping geometries.
 
 ## Use case
+The motivation for this tool originated from a satellite tasking order analysis use case. Many commercial satellite data providers offer a tasking-based data collection service, where customers submit orders for specific areas of interest—typically defined as polygons. The satellite (or constellation) then collects data over these areas, often capturing imagery in overlapping strips.
 
-The idea for the tool came from a specific use case connected with satellite tasking ordering analytics. Most commercial satellite data providers have a "tasking" type of data collection. Their customers place orders for specific areas (often defined as a polygon), and then the satellite (constellation) data collection for this area. Satellites capture data in strips that overlap.
+This analysis aims to reconstruct the original ordered area based on captured satellite images. The approach clusters spatially overlapping satellite captures while considering a temporal threshold (e.g., 10 days - see example below) to group images that likely correspond to the same tasking request.
 
-The idea of the analysis is to derive the original order area based on satellite captures.
+<img width="816" alt="st-polygoncluster" src="https://github.com/user-attachments/assets/73d72b6d-6f88-4b5c-a54f-9ff31ea17040" />
 
 ## Features
 - **Polygon-Based Clustering**: Works with polygon geometries instead of just points.
