@@ -45,6 +45,9 @@ clustered_gdf.to_file("./data/clustered_output.geojson", driver="GeoJSON")
 ```
 
 ## Parameters
+- **gdf**: GeoDataFrame with polygon geometries
+- **time_key**: Optional column name for temporal clustering (e.g., "timestamp")
+- **time_threshold**: Time difference in seconds to consider polygons in the same cluster (default: 3600)
 - **min_cluster_size**: Minimum number of polygons required to form a valid cluster. Components smaller than this are assigned `cluster_id = -1`.
 
 ## TODO
