@@ -3,6 +3,8 @@
 ## Overview
 This library provides tools for clustering polygon geometries based on spatial and temporal proximity. Unlike traditional clustering libraries that focus on point geometries, this library is designed to handle polygons, identifying neighbors through overlapping geometries.
 
+This library is provided as-is, mainly as a reference implementation. It may not receive frequent updates, but feel free to open issues or forks.
+
 ## Use case
 The motivation for this tool originated from a satellite tasking order analysis use case. Many commercial satellite data providers offer a tasking-based data collection service, where customers submit orders for specific areas of interest—typically defined as polygons. The satellite (or constellation) then collects data over these areas, often capturing imagery in overlapping strips.
 
@@ -21,8 +23,10 @@ This analysis aims to reconstruct the original ordered area based on captured sa
 - **Sparse Adjacency Representation**: Improves scalability for large datasets.
 
 ## Installation
+The library is not currently published at PyPi. One of the ways of using it - get it directly from GitHub.
+
 ```bash
-pip install st-polygoncluster
+pip install git+https://github.com/mykolakozyr/ST-PolygonCluster.git
 ```
 
 ## Usage
@@ -51,6 +55,3 @@ clustered_gdf.to_file("./data/clustered_output.geojson", driver="GeoJSON")
 2. **Apply Time Constraints (if enabled):** Polygons are only clustered together if they fall within the specified **time threshold**.
 3. **Ensure Transitive Closure:** If polygon A overlaps with B and B overlaps with C, **all three will be in the same cluster**.
 4. **Assign Cluster IDs:** Connected components are extracted using an adjacency graph and labeled accordingly.
-
-## Contributions
-PRs are welcome! If you find a bug or want to add a feature, feel free to submit an issue or open a pull request.
