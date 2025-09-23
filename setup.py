@@ -4,8 +4,7 @@ setup(
     name="st_polygoncluster",
     version="0.1.0",
     description="Spatio-temporal clustering for polygon geometries",
-    author="Your Name",
-    author_email="your.email@example.com",
+    author="Mykola Kozyr",
     packages=find_packages(),
     install_requires=[
         "geopandas",
