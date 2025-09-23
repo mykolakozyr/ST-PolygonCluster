@@ -14,6 +14,7 @@ This analysis aims to reconstruct the original ordered area based on captured sa
 - **Polygon-Based Clustering**: Works with polygon geometries instead of just points.
 - **Neighbor Detection**: Uses true polygon intersection.
 - **Optional Temporal Component**: Clusters can incorporate a time-based proximity metric.
+- **Minimum Cluster Size**: Optionally enforce a minimum number of polygons per cluster, labeling smaller components as noise.
 - **Designed for GeoDataFrames**: Works directly with `geopandas.GeoDataFrame` objects.
 - **Efficient Spatial Indexing**: Uses an R-tree index for fast neighbor lookup.
 - **Transitive Closure**: Ensures that indirectly connected polygons belong to the same cluster.
@@ -33,14 +34,16 @@ from st_polygoncluster.clustering import cluster_polygons
 gdf = gpd.read_file("./data/example.geojson")
 
 # Run clustering
-clustered_gdf = cluster_polygons(gdf, time_key="timestamp", time_threshold=600)
+clustered_gdf = cluster_polygons(gdf, time_key="timestamp", time_threshold=600, min_cluster_size=2)
 
 # Save results
 clustered_gdf.to_file("./data/clustered_output.geojson", driver="GeoJSON")
 ```
 
+## Parameters
+- **min_cluster_size**: Minimum number of polygons required to form a valid cluster. Components smaller than this are assigned `cluster_id = -1`.
+
 ## TODO
-- Be able to define the **number of elements per cluster**.
 - Define the **overlap % threshold** for neighbor detection.
 
 ## How It Works

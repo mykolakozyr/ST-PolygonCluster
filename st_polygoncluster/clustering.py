@@ -5,7 +5,12 @@ from scipy.sparse.csgraph import connected_components
 from scipy.sparse import csr_matrix
 from st_polygoncluster.neighbors import find_overlapping_neighbors
 
-def cluster_polygons(gdf: gpd.GeoDataFrame, time_key: str = None, time_threshold: int = 3600) -> gpd.GeoDataFrame:
+def cluster_polygons(
+    gdf: gpd.GeoDataFrame,
+    time_key: str = None,
+    time_threshold: int = 3600,
+    min_cluster_size: int = 1,
+) -> gpd.GeoDataFrame:
     """
     Clusters polygons based on spatial intersection and temporal proximity.
     Ensures transitive closure only within actual connected components.
@@ -14,6 +19,8 @@ def cluster_polygons(gdf: gpd.GeoDataFrame, time_key: str = None, time_threshold
     - gdf: GeoDataFrame with polygon geometries
     - time_key: Optional column for temporal clustering
     - time_threshold: Time difference (in seconds) to consider polygons in the same cluster
+    - min_cluster_size: Minimum number of elements required for a cluster to be valid.
+      Clusters smaller than this threshold are labeled as -1.
     
     Returns:
     - GeoDataFrame with `cluster_id`
@@ -37,6 +44,14 @@ def cluster_polygons(gdf: gpd.GeoDataFrame, time_key: str = None, time_threshold
 
     # Compute connected components **without over-expanding clusters**
     n_components, labels = connected_components(csgraph=graph, directed=False)
+
+    # Enforce minimum cluster size: mark clusters smaller than threshold as noise (-1)
+    if min_cluster_size is not None and min_cluster_size > 1:
+        # Count elements per component label
+        label_counts = pd.Series(labels).value_counts()
+        small_labels = set(label_counts[label_counts < min_cluster_size].index.tolist())
+        if small_labels:
+            labels = np.array([-1 if lbl in small_labels else int(lbl) for lbl in labels])
 
     gdf["cluster_id"] = labels
     return gdf

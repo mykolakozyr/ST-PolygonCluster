@@ -27,5 +27,15 @@ class TestClustering(unittest.TestCase):
         self.assertEqual(cluster_labels[0], cluster_labels[2])  # Third should also be in the same cluster
         self.assertNotEqual(cluster_labels[0], cluster_labels[3])  # Fourth should be separate
 
+    def test_min_cluster_size(self):
+        """Clusters smaller than min_cluster_size should be labeled as -1 (noise)."""
+        clustered_gdf = cluster_polygons(self.gdf, time_key="timestamp", time_threshold=7200, min_cluster_size=3)
+        cluster_labels = clustered_gdf["cluster_id"].tolist()
+
+        # With relaxed time, first three polygons form a cluster of size 3; fourth is alone and should be -1
+        self.assertEqual(cluster_labels[0], cluster_labels[1])
+        self.assertEqual(cluster_labels[0], cluster_labels[2])
+        self.assertEqual(cluster_labels[3], -1)
+
 if __name__ == "__main__":
     unittest.main()
