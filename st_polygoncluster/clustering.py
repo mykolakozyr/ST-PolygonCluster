@@ -10,7 +10,7 @@ def cluster_polygons(
     time_key: str = None,
     time_threshold: int = 3600,
     min_cluster_size: int = 1,
-    overlap_threshold: float = 50.0,
+    overlap_threshold: float = 0.0,
 ) -> gpd.GeoDataFrame:
     """
     Clusters polygons based on spatial intersection and temporal proximity.
@@ -23,7 +23,7 @@ def cluster_polygons(
     - min_cluster_size: Minimum number of elements required for a cluster to be valid.
       Clusters smaller than this threshold are labeled as -1.
     - overlap_threshold: Minimum intersection-over-union percentage (0-100) required
-      for polygons to be considered neighbors.
+      for polygons to be considered neighbors. Defaults to 0.
     
     Returns:
     - GeoDataFrame with `cluster_id`

@@ -37,13 +37,13 @@ from st_polygoncluster.clustering import cluster_polygons
 # Load a sample dataset
 gdf = gpd.read_file("./data/example.geojson")
 
-# Run clustering (default overlap threshold is 50%; adjust as needed)
+# Run clustering (raise overlap_threshold if you need stricter overlap; defaults to 0%)
 clustered_gdf = cluster_polygons(
     gdf,
     time_key="timestamp",
     time_threshold=600,
     min_cluster_size=2,
-    overlap_threshold=10,
+    overlap_threshold=50,
 )
 
 # Save results
@@ -55,7 +55,7 @@ clustered_gdf.to_file("./data/clustered_output.geojson", driver="GeoJSON")
 - **time_key**: Optional column name for temporal clustering (e.g., "timestamp")
 - **time_threshold**: Time difference in seconds to consider polygons in the same cluster (default: 3600)
 - **min_cluster_size**: Minimum number of polygons required to form a valid cluster. Components smaller than this are assigned `cluster_id = -1`.
-- **overlap_threshold**: Minimum intersection-over-union percentage (0-100) required for polygons to be considered neighbors (default: 50).
+- **overlap_threshold**: Minimum intersection-over-union percentage (0-100) required for polygons to be considered neighbors (default: 0).
 
 ## TODO
 - Add alternate overlap metrics (e.g., symmetric coverage) alongside IoU.

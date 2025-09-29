@@ -31,11 +31,11 @@ def _normalize_candidate_indices(
 
 
 def find_overlapping_neighbors(
-    gdf: gpd.GeoDataFrame, overlap_threshold: float = 50.0
+    gdf: gpd.GeoDataFrame, overlap_threshold: float = 0.0
 ) -> dict:
     """
     Efficiently find neighbors whose polygon intersection exceeds a percentage of
-    their combined footprint.
+    their combined footprint. Defaults to 0% (any positive IoU qualifies).
     """
     if not 0 <= overlap_threshold <= 100:
         raise ValueError("overlap_threshold must be between 0 and 100 inclusive")

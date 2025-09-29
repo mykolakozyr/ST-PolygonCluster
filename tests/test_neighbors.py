@@ -10,7 +10,7 @@ class TestNeighbors(unittest.TestCase):
         self.gdf = gpd.read_file("./data/example.geojson")
 
     def test_find_overlapping_neighbors(self):
-        neighbors = find_overlapping_neighbors(self.gdf, overlap_threshold=10)
+        neighbors = find_overlapping_neighbors(self.gdf)
 
         # First three polygons should have overlapping neighbors
         self.assertTrue(1 in neighbors[0])

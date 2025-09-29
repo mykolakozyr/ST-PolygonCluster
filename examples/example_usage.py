@@ -4,7 +4,7 @@ from st_polygoncluster.clustering import cluster_polygons
 # Load a sample dataset
 gdf = gpd.read_file("./data/example.geojson")
 
-# Run clustering
+# Run clustering with a stricter overlap requirement
 clustered_gdf = cluster_polygons(
     gdf,
     time_key="timestamp",

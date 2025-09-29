@@ -11,7 +11,7 @@ class TestClustering(unittest.TestCase):
 
     def test_cluster_polygons_small_time(self):
         """Test clustering with a strict temporal threshold where the third polygon is separate."""
-        clustered_gdf = cluster_polygons(self.gdf, time_key="timestamp", time_threshold=600, overlap_threshold=10)  # 10 min
+        clustered_gdf = cluster_polygons(self.gdf, time_key="timestamp", time_threshold=600)  # 10 min
         cluster_labels = clustered_gdf["cluster_id"].tolist()
         
         # Expecting two clusters: first two polygons in one, third separate, fourth separate
@@ -21,7 +21,7 @@ class TestClustering(unittest.TestCase):
 
     def test_cluster_polygons_large_time(self):
         """Test clustering with a relaxed temporal threshold where the third polygon joins the cluster."""
-        clustered_gdf = cluster_polygons(self.gdf, time_key="timestamp", time_threshold=7200, overlap_threshold=10)  # 2 hours
+        clustered_gdf = cluster_polygons(self.gdf, time_key="timestamp", time_threshold=7200)  # 2 hours
         cluster_labels = clustered_gdf["cluster_id"].tolist()
         
         # Expecting one main cluster (first three polygons) and one separate (fourth polygon)
@@ -31,7 +31,7 @@ class TestClustering(unittest.TestCase):
 
     def test_min_cluster_size(self):
         """Clusters smaller than min_cluster_size should be labeled as -1 (noise)."""
-        clustered_gdf = cluster_polygons(self.gdf, time_key="timestamp", time_threshold=7200, min_cluster_size=3, overlap_threshold=10)
+        clustered_gdf = cluster_polygons(self.gdf, time_key="timestamp", time_threshold=7200, min_cluster_size=3)
         cluster_labels = clustered_gdf["cluster_id"].tolist()
 
         # With relaxed time, first three polygons form a cluster of size 3; fourth is alone and should be -1
