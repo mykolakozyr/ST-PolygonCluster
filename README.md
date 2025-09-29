@@ -14,7 +14,7 @@ This analysis aims to reconstruct the original ordered area based on captured sa
 
 ## Features
 - **Polygon-Based Clustering**: Works with polygon geometries instead of just points.
-- **Neighbor Detection**: Uses true polygon intersection.
+- **Neighbor Detection**: Uses true polygon intersection with a configurable overlap threshold.
 - **Optional Temporal Component**: Clusters can incorporate a time-based proximity metric.
 - **Minimum Cluster Size**: Optionally enforce a minimum number of polygons per cluster, labeling smaller components as noise.
 - **Designed for GeoDataFrames**: Works directly with `geopandas.GeoDataFrame` objects.
@@ -37,8 +37,14 @@ from st_polygoncluster.clustering import cluster_polygons
 # Load a sample dataset
 gdf = gpd.read_file("./data/example.geojson")
 
-# Run clustering
-clustered_gdf = cluster_polygons(gdf, time_key="timestamp", time_threshold=600, min_cluster_size=2)
+# Run clustering (default overlap threshold is 50%; adjust as needed)
+clustered_gdf = cluster_polygons(
+    gdf,
+    time_key="timestamp",
+    time_threshold=600,
+    min_cluster_size=2,
+    overlap_threshold=10,
+)
 
 # Save results
 clustered_gdf.to_file("./data/clustered_output.geojson", driver="GeoJSON")
@@ -49,9 +55,10 @@ clustered_gdf.to_file("./data/clustered_output.geojson", driver="GeoJSON")
 - **time_key**: Optional column name for temporal clustering (e.g., "timestamp")
 - **time_threshold**: Time difference in seconds to consider polygons in the same cluster (default: 3600)
 - **min_cluster_size**: Minimum number of polygons required to form a valid cluster. Components smaller than this are assigned `cluster_id = -1`.
+- **overlap_threshold**: Minimum intersection-over-union percentage (0-100) required for polygons to be considered neighbors (default: 50).
 
 ## TODO
-- Define the **overlap % threshold** for neighbor detection.
+- Add alternate overlap metrics (e.g., symmetric coverage) alongside IoU.
 
 ## How It Works
 1. **Find Neighbors:** Polygons are evaluated based on **true intersection** (not just BBOX).
