@@ -27,3 +27,9 @@ All new behavior must ship with tests in `tests/` whose names begin with `test_`
 
 ## Commit & Pull Request Guidelines
 History favors concise, imperative summaries (`Clean up data and examples`) with optional dash-separated details in the body. Organize commits around logical units (data prep, algorithm change, docs) to ease review. PRs should describe the motivating scenario, link any tracking issue, call out data files added or modified, and include screenshots or GeoJSON diffs when visual behavior shifts. Mention required follow-up tasks in a checklist so they are not forgotten.
+
+## Project Context Notes
+- Clustering builds a graph from polygon pairs whose intersection-over-union clears the configured overlap threshold (defaults to 0%, so any overlap forms an edge unless a stricter value is supplied), then labels connected components.
+- Temporal filtering is optional: when `time_key` and `time_threshold` are provided, edges violating the time window are dropped before component analysis.
+- The code relies on GeoPandas, Shapely (STRtree), NumPy, and SciPy; ensure these heavy GIS dependencies are installed locally before running tests.
+- Unit tests use both fixture GeoJSON files and in-memory Shapely polygons to cover overlap thresholds; successful test runs require the Geo stack.

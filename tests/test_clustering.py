@@ -1,5 +1,7 @@
 import geopandas as gpd
 import unittest
+from shapely.geometry import Polygon
+
 from st_polygoncluster.clustering import cluster_polygons
 
 class TestClustering(unittest.TestCase):
@@ -36,6 +38,20 @@ class TestClustering(unittest.TestCase):
         self.assertEqual(cluster_labels[0], cluster_labels[1])
         self.assertEqual(cluster_labels[0], cluster_labels[2])
         self.assertEqual(cluster_labels[3], -1)
+
+    def test_overlap_threshold_controls_cluster_membership(self):
+        square_a = Polygon([(0, 0), (1, 0), (1, 1), (0, 1)])
+        square_b = Polygon([(0.2, 0.2), (1.2, 0.2), (1.2, 1.2), (0.2, 1.2)])
+        gdf = gpd.GeoDataFrame({"geometry": [square_a, square_b]}, geometry="geometry", crs="EPSG:4326")
+
+        strict_clusters = cluster_polygons(gdf.copy(), overlap_threshold=50)
+        relaxed_clusters = cluster_polygons(gdf.copy(), overlap_threshold=40)
+
+        strict_labels = strict_clusters["cluster_id"].tolist()
+        relaxed_labels = relaxed_clusters["cluster_id"].tolist()
+
+        self.assertNotEqual(strict_labels[0], strict_labels[1])
+        self.assertEqual(relaxed_labels[0], relaxed_labels[1])
 
 if __name__ == "__main__":
     unittest.main()
