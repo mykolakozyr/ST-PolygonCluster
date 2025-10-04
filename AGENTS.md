@@ -33,3 +33,9 @@ History favors concise, imperative summaries (`Clean up data and examples`) with
 - Temporal filtering is optional: when `time_key` and `time_threshold` are provided, edges violating the time window are dropped before component analysis.
 - The code relies on GeoPandas, Shapely (STRtree), NumPy, and SciPy; ensure these heavy GIS dependencies are installed locally before running tests.
 - Unit tests use both fixture GeoJSON files and in-memory Shapely polygons to cover overlap thresholds; successful test runs require the Geo stack.
+
+
+## Additional Context
+- `cluster_polygons` normalizes cluster IDs so valid clusters are sequentially numbered starting at 0, with `-1` reserved for noise clusters.
+- Running the test suite requires the geospatial dependencies from `requirements.txt` (e.g., GeoPandas, Shapely); ensure they are installed in the active environment before invoking `pytest`.
+
