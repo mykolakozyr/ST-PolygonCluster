@@ -49,12 +49,18 @@ def cluster_polygons(
     n_components, labels = connected_components(csgraph=graph, directed=False)
 
     # Enforce minimum cluster size: mark clusters smaller than threshold as noise (-1)
-    if min_cluster_size is not None and min_cluster_size > 1:
-        # Count elements per component label
-        label_counts = pd.Series(labels).value_counts()
-        small_labels = set(label_counts[label_counts < min_cluster_size].index.tolist())
-        if small_labels:
-            labels = np.array([-1 if lbl in small_labels else int(lbl) for lbl in labels])
+    labels_series = pd.Series(labels, dtype=int)
 
-    gdf["cluster_id"] = labels
+    if min_cluster_size is not None and min_cluster_size > 1:
+        label_counts = labels_series.value_counts()
+        small_labels = label_counts[label_counts < min_cluster_size].index
+        if not small_labels.empty:
+            labels_series = labels_series.mask(labels_series.isin(small_labels), -1)
+
+    valid_labels = [label for label in pd.unique(labels_series) if label != -1]
+    if valid_labels:
+        remap = {old_label: new_idx for new_idx, old_label in enumerate(valid_labels)}
+        labels_series = labels_series.replace(remap)
+
+    gdf["cluster_id"] = labels_series.astype(int).to_numpy()
     return gdf

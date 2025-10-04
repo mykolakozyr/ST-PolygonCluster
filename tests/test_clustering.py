@@ -39,6 +39,27 @@ class TestClustering(unittest.TestCase):
         self.assertEqual(cluster_labels[0], cluster_labels[2])
         self.assertEqual(cluster_labels[3], -1)
 
+    def test_cluster_ids_are_sequential_after_noise(self):
+        """Remaining cluster labels are renumbered sequentially after removing noise."""
+        noise_poly_a = Polygon([(10, 10), (11, 10), (11, 11), (10, 11)])
+        cluster_poly_1 = Polygon([(0, 0), (1, 0), (1, 1), (0, 1)])
+        cluster_poly_2 = Polygon([(0.5, 0.5), (1.5, 0.5), (1.5, 1.5), (0.5, 1.5)])
+        noise_poly_b = Polygon([(20, 20), (21, 20), (21, 21), (20, 21)])
+
+        gdf = gpd.GeoDataFrame(
+            {"geometry": [noise_poly_a, cluster_poly_1, cluster_poly_2, noise_poly_b]},
+            geometry="geometry",
+            crs="EPSG:4326",
+        )
+
+        clustered = cluster_polygons(gdf, min_cluster_size=2)
+        labels = clustered["cluster_id"].tolist()
+
+        self.assertEqual(labels[0], -1)
+        self.assertEqual(labels[3], -1)
+        self.assertEqual(labels[1], labels[2])
+        self.assertEqual(set(labels), {0, -1})
+
     def test_overlap_threshold_controls_cluster_membership(self):
         square_a = Polygon([(0, 0), (1, 0), (1, 1), (0, 1)])
         square_b = Polygon([(0.2, 0.2), (1.2, 0.2), (1.2, 1.2), (0.2, 1.2)])
