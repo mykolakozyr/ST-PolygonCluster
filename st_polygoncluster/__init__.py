@@ -5,9 +5,9 @@ try:
     try:
         __version__ = _pkg_version("st_polygoncluster")
     except _PkgNotFound:
-        __version__ = "0.0.0"
+        __version__ = "0.7.0"
 except Exception:
-    __version__ = "0.0.0"
+    __version__ = "0.7.0"
 
 from .neighbors import find_overlapping_neighbors
 from .clustering import cluster_polygons

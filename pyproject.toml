@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "st_polygoncluster"
-version = "0.1.0"
+version = "0.7.0"
 description = "Spatio-temporal clustering for polygon geometries"
 readme = "README.md"
 requires-python = ">=3.9"
@@ -29,5 +29,4 @@ Homepage = "https://github.com/mykolakozyr/ST-PolygonCluster"
 
 [tool.setuptools]
 packages = ["st_polygoncluster"]
-
 
